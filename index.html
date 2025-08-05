@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>YouTube 0-View Bingo</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				text-align: center;
+				padding: 40px;
+				background: #111;
+				color: #fff;
+			}
+			button {
+				font-size: 1.5rem;
+				padding: 1rem 2rem;
+				background: #ff4747;
+				color: #fff;
+				border: none;
+				border-radius: 10px;
+				cursor: pointer;
+				margin: 10px;
+			}
+			button:hover {
+				background: #e43d3d;
+			}
+			#output {
+				margin-top: 40px;
+				font-size: 1.4rem;
+			}
+			a {
+				color: #00e0ff;
+				text-decoration: underline;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>🎯 YouTube Recycle Bin Bingo</h1>
+		<p>Click a button to get a random 0-view search string!</p>
+		<button onclick="generateSearch('old')">🔁 Old & Forgotten</button>
+		<button onclick="generateSearch('new')">✨ Brand New</button>
+
+		<div id="output"></div>
+
+		<script>
+			const oldPrefixes = {
+				IMG: { type: "numeric", digits: 4 },
+				MVI: { type: "numeric", digits: 4 },
+				MOV: { type: "numeric", digits: 4 },
+				DSC: { type: "numeric", digits: 4 },
+				DSCN: { type: "numeric", digits: 4 },
+				GOPR: { type: "numeric", digits: 4 },
+				GP01: { type: "numeric", digits: 4 },
+				DJI: { type: "numeric", digits: 4 },
+				HNI: { type: "numeric", digits: 3 },
+				WA0: { type: "numeric", digits: 3 },
+				MOLOA: { type: "alphanumeric", format: "A999" },
+				MOLOX: { type: "alphanumeric", format: "X99" },
+				HMS: { type: "time" },
+				P10: { type: "numeric", digits: 5 },
+				VTS: {
+					type: "custom",
+					generate: () =>
+						`VTS ${Math.floor(Math.random() * 99)
+							.toString()
+							.padStart(2, "0")}`,
+				},
+				"My Slideshow": { type: "numeric", digits: 4 },
+				"My Stupeflix Video": { type: "numeric", digits: 4 },
+				YMD: { type: "date" },
+				"WIN (YMD)": { type: "date" },
+				"VID (YMD)": { type: "date" },
+				"Capture (YMD)": { type: "date" },
+				"AUD-": { type: "date", prefix: "AUD-" },
+				"PXL (YMD)": { type: "date" },
+				"InShot (YMD)": { type: "date" },
+			};
+
+			const newPrefixes = [
+				"IMG",
+				"MVI",
+				"WIN",
+				"VID",
+				"Capture",
+				"PXL",
+				"InShot",
+				"WhatsApp Video",
+				"RPReplay",
+				"My Movie",
+				"My Edited Video",
+				"FullSizeRender",
+				"VTS 01",
+			];
+
+			function generateSearch(mode) {
+				let searchString = "";
+
+				if (mode === "old") {
+					const keys = Object.keys(oldPrefixes);
+					const prefix = keys[Math.floor(Math.random() * keys.length)];
+					const profile = oldPrefixes[prefix];
+					let value = "";
+
+					switch (profile.type) {
+						case "numeric":
+							value = randomNumberString(profile.digits);
+							break;
+						case "date":
+							const year = Math.floor(Math.random() * (2022 - 2006 + 1)) + 2006;
+							const month = ("0" + Math.floor(Math.random() * 12 + 1)).slice(
+								-2
+							);
+							const day = ("0" + Math.floor(Math.random() * 28 + 1)).slice(-2);
+							value = `${year}${month}${day}`;
+							break;
+						case "time":
+							const h = ("0" + Math.floor(Math.random() * 24)).slice(-2);
+							const m = ("0" + Math.floor(Math.random() * 60)).slice(-2);
+							const s = ("0" + Math.floor(Math.random() * 60)).slice(-2);
+							value = `${h}${m}${s}`;
+							break;
+						case "alphanumeric":
+							if (profile.format === "A999") {
+								const letter = String.fromCharCode(
+									65 + Math.floor(Math.random() * 26)
+								);
+								value = `${letter}${randomNumberString(3)}`;
+							} else if (profile.format === "X99") {
+								value = `X${randomNumberString(2)}`;
+							}
+							break;
+						case "custom":
+							searchString = profile.generate();
+							break;
+					}
+
+					if (!searchString) {
+						searchString = `${profile.prefix || prefix} ${value}`.trim();
+					}
+				} else {
+					const prefix =
+						newPrefixes[Math.floor(Math.random() * newPrefixes.length)];
+					const year = new Date().getFullYear();
+					searchString = `${prefix} ${year}`;
+				}
+
+				const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
+					searchString
+				)}`;
+				document.getElementById("output").innerHTML = `
+        <p><strong>Search String:</strong> ${searchString}</p>
+        <p><a href="${searchUrl}" target="_blank">🔍 Search on YouTube</a></p>
+        <p>made by bryanthaboi, map by MingKasterMK / KVN AUST & MIKA VIRUS</p>
+      `;
+			}
+
+			function randomNumberString(digits) {
+				let str = "";
+				for (let i = 0; i < digits; i++) {
+					str += Math.floor(Math.random() * 10);
+				}
+				return str;
+			}
+		</script>
+	</body>
+</html>
