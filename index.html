@@ -38,7 +38,8 @@
 		<h1>🎯 YouTube Recycle Bin Bingo</h1>
 		<p>Click a button to get a random 0-view search string!</p>
 		<button onclick="generateSearch('old')">🔁 Old & Forgotten</button>
-		<button onclick="generateSearch('new')">✨ Brand New</button>
+		<button onclick="generateSearch('new')">✨ Brand New</button><br />
+		<button onclick="generateAndOpen('old')">🎰 I'm Feeling Lucky</button>
 
 		<div id="output"></div>
 
@@ -243,6 +244,16 @@
         <p><a href="${searchUrl}" target="_blank">🔍 Search on YouTube</a></p>
         <p>made by bryanthaboi, map by MingKasterMK / KVN AUST & MIKA VIRUS</p>
       `;
+
+				return searchString;
+			}
+
+			function generateAndOpen(mode) {
+				const searchString = generateSearch(mode);
+				const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
+					searchString
+				)}`;
+				window.open(searchUrl, "_blank");
 			}
 
 			function randomNumberString(digits) {
