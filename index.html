@@ -111,14 +111,23 @@
 				color: #00e0ff;
 				text-decoration: underline;
 			}
+			.lucky {
+				background: #00e0ff;
+				color: #000;
+			}
+			.lucky:hover {
+				background: #00c0e0;
+			}
 		</style>
 	</head>
 	<body>
-		<h1>🎯 YouTube Recycle Bin Bingo</h1>
+		<h1>🎯 YouTube 0-View Bingo Helper</h1>
 		<p>Click a button to get a random 0-view search string!</p>
 		<button onclick="generateSearch('old')">🔁 Old & Forgotten</button>
 		<button onclick="generateSearch('new')">✨ Brand New</button><br />
-		<button onclick="generateAndOpen('old')">🎰 I'm Feeling Lucky</button>
+		<button class="lucky" onclick="generateAndOpen('old')">
+			🎰 I'm Feeling Lucky
+		</button>
 
 		<div id="output"></div>
 		<p>
