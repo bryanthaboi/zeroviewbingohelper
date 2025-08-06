@@ -42,7 +42,11 @@
 		<button onclick="generateAndOpen('old')">🎰 I'm Feeling Lucky</button>
 
 		<div id="output"></div>
-
+		<p>
+			made by
+			<a href="https://youtube.com/@bryanthaboi">bryanthaboi</a>, map by
+			<a href="https://youtube.com/@KVNAUST">KVN AUST</a> & MIKA VIRUS
+		</p>
 		<script>
 			const oldPrefixes = {
 				IMG: { type: "numeric", digits: 4, prefix: "IMG" },
@@ -242,7 +246,7 @@
 				document.getElementById("output").innerHTML = `
         <p><strong>Search String:</strong> ${searchString}</p>
         <p><a href="${searchUrl}" target="_blank">🔍 Search on YouTube</a></p>
-        <p>made by bryanthaboi, map by MingKasterMK / KVN AUST & MIKA VIRUS</p>
+        
       `;
 
 				return searchString;
