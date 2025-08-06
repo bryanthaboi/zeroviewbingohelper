@@ -47,27 +47,57 @@
 				IMG: { type: "numeric", digits: 4 },
 				MVI: { type: "numeric", digits: 4 },
 				MOV: { type: "numeric", digits: 4 },
+				100: { type: "numeric", digits: 4 },
+				SAM: { type: "numeric", digits: 4 },
 				DSC: { type: "numeric", digits: 4 },
-				DSCN: { type: "numeric", digits: 4 },
-				GOPR: { type: "numeric", digits: 4 },
-				GP01: { type: "numeric", digits: 4 },
+				SDV: { type: "numeric", digits: 4 },
+				DSCF: { type: "numeric", digits: 4, prefix: "DSCF" },
+				DSCN: { type: "numeric", digits: 4, prefix: "DSCN" },
+				GOPR: { type: "numeric", digits: 4, prefix: "GOPR" },
+				PICT: { type: "numeric", digits: 4, prefix: "PICT" },
+				MAQ0: { type: "numeric", digits: 4, prefix: "MAQ0" },
+				MAQ1: { type: "numeric", digits: 4, prefix: "MAQ1" },
+				MAQ2: { type: "numeric", digits: 4, prefix: "MAQ2" },
+				MAQ3: { type: "numeric", digits: 4, prefix: "MAQ3" },
+				MAQ4: { type: "numeric", digits: 4, prefix: "MAQ4" },
+				MAQ5: { type: "numeric", digits: 4, prefix: "MAQ5" },
+				MAQ6: { type: "numeric", digits: 4, prefix: "MAQ6" },
+				GP01: { type: "numeric", digits: 4, prefix: "GP01" },
+				GX01: { type: "numeric", digits: 4, prefix: "GX01" },
 				DJI: { type: "numeric", digits: 4 },
-				HNI: { type: "numeric", digits: 3 },
-				WA0: { type: "numeric", digits: 3 },
-				MOLOA: { type: "alphanumeric", format: "A999" },
-				MOLOX: { type: "alphanumeric", format: "X99" },
-				HMS: { type: "time" },
-				P10: { type: "numeric", digits: 5 },
-				VTS: {
+				HNI: {
 					type: "custom",
 					generate: () =>
-						`VTS ${Math.floor(Math.random() * 99)
-							.toString()
-							.padStart(2, "0")}`,
+						`HNI 0${String(Math.floor(Math.random() * 101)).padStart(3, "0")}`,
 				},
-				"My Slideshow": { type: "numeric", digits: 4 },
-				"My Stupeflix Video": { type: "numeric", digits: 4 },
-				YMD: { type: "date" },
+				WA0: {
+					type: "custom",
+					generate: () =>
+						`WA90${String(Math.floor(Math.random() * 999)).padStart(3, "0")}`,
+				},
+
+				MOL0: {
+					type: "custom",
+					generate: () => `MOL0${getMOL()}`,
+				},
+
+				HMS: { type: "time" },
+				P10: {
+					type: "custom",
+					generate: () =>
+						`P10${String(Math.floor(Math.random() * 19999)).padStart(5, "0")}`,
+				},
+				VTS: {
+					type: "custom",
+					generate: () => `${getVTS()}`,
+				},
+				"Slideshow or Stupeflix Video": {
+					type: "custom",
+					generate: () => `${getSlideShowOrStupeflix()}`,
+				},
+				"(YMD)": { type: "date" },
+				"(MDY)": { type: "date" },
+				"(DMY)": { type: "date" },
 				"WIN (YMD)": { type: "date" },
 				"VID (YMD)": { type: "date" },
 				"Capture (YMD)": { type: "date" },
@@ -91,6 +121,61 @@
 				"FullSizeRender",
 				"VTS 01",
 			];
+			function getSlideShowOrStupeflix() {
+				const formats = [
+					() => "My Slideshow",
+					() =>
+						`My Slideshow ${Math.floor(Math.random() * 100)
+							.toString()
+							.padStart(2, "0")}`,
+					() => "My Slideshow Video",
+					() => "My Stupeflix Video",
+					() =>
+						`My Stupeflix Video ${Math.floor(Math.random() * 1051)
+							.toString()
+							.padStart(4, "0")}`,
+				];
+
+				const choice = Math.floor(Math.random() * formats.length);
+				return formats[choice]();
+			}
+			function getMOL() {
+				const shouldReturnLetterNumber = Math.random() < 0.5; // 50/50 chance
+
+				if (shouldReturnLetterNumber) {
+					const letters = "ABCDEF";
+					const letter = letters[Math.floor(Math.random() * letters.length)];
+					const number = Math.floor(Math.random() * 10); // 0–9
+					return letter + number;
+				} else {
+					const num = Math.floor(Math.random() * 100); // 0–99
+					return num.toString().padStart(2, "0");
+				}
+			}
+			function getVTS() {
+				const formatType = Math.floor(Math.random() * 3); // 0, 1, or 2
+
+				if (formatType === 0) {
+					// Format: VTS XX X
+					const part1 = Math.floor(Math.random() * 100)
+						.toString()
+						.padStart(2, "0");
+					const part2 = Math.floor(Math.random() * 10); // 0–9
+					return `VTS ${part1} ${part2}`;
+				} else if (formatType === 1) {
+					// Format: VTS XXX 1
+					const part1 = Math.floor(Math.random() * 1000)
+						.toString()
+						.padStart(3, "0");
+					return `VTS ${part1} 1`;
+				} else {
+					// Format: VTS 01 XXX
+					const part2 = Math.floor(Math.random() * 1000)
+						.toString()
+						.padStart(3, "0");
+					return `VTS 01 ${part2}`;
+				}
+			}
 
 			function generateSearch(mode) {
 				let searchString = "";
@@ -106,12 +191,24 @@
 							value = randomNumberString(profile.digits);
 							break;
 						case "date":
-							const year = Math.floor(Math.random() * (2022 - 2006 + 1)) + 2006;
+							const year = Math.floor(Math.random() * (2025 - 2005 + 1)) + 2005;
 							const month = ("0" + Math.floor(Math.random() * 12 + 1)).slice(
 								-2
 							);
 							const day = ("0" + Math.floor(Math.random() * 28 + 1)).slice(-2);
-							value = `${year}${month}${day}`;
+
+							// Determine the format based on the prefix key
+							if (prefix.includes("YMD")) {
+								value = `${year}${month}${day}`;
+							} else if (prefix.includes("DMY")) {
+								value = `${day}${month}${year}`;
+							} else if (prefix.includes("MDY")) {
+								value = `${month}${day}${year}`;
+							} else {
+								value = `${year}${month}${day}`; // fallback
+							}
+
+							searchString = value;
 							break;
 						case "time":
 							const h = ("0" + Math.floor(Math.random() * 24)).slice(-2);
